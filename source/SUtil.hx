@@ -1,22 +1,23 @@
 package;
 
 #if android
-import android.Hardware;
 import android.Permissions;
 import android.os.Build;
 import android.os.Environment;
+import android.widget.Toast;
 #end
 import flash.system.System;
 import flixel.FlxG;
 import haxe.CallStack.StackItem;
 import haxe.CallStack;
 import haxe.io.Path;
-import lime.app.Application;
 import openfl.Lib;
 import openfl.events.UncaughtErrorEvent;
 import openfl.utils.Assets;
+#if (sys && !ios)
 import sys.FileSystem;
 import sys.io.File;
+#end
 
 using StringTools;
 
@@ -42,13 +43,13 @@ class SUtil
 				/**
 				 * Basically for now i can't force the app to stop while its requesting a android permission, so this makes the app to stop while its requesting the specific permission
 				 */
-				Application.current.window.alert('If you accepted the permissions you are all good!' + "\nIf you didn't then expect a crash"
-					+ 'Press Ok to see what happens',
+				Lib.application.window.alert('If you accepted the permissions you are all good!' + "\nIf you didn't then expect a crash"
+					+ '\nPress Ok to see what happens',
 					'Permissions?');
 			}
 			else
 			{
-				Application.current.window.alert('Please grant the game storage permissions in app settings' + '\nPress Ok to close the app', 'Permissions?');
+				Lib.application.window.alert('Please grant the game storage permissions in app settings' + '\nPress Ok to close the app', 'Permissions?');
 				System.exit(1);
 			}
 		}
@@ -59,6 +60,9 @@ class SUtil
 			if (!FileSystem.exists(SUtil.getPath()))
 				FileSystem.createDirectory(SUtil.getPath());
 
+			if (!FileSystem.exists(SUtil.getPath() + 'mods'))
+				FileSystem.createDirectory(SUtil.getPath() + 'mods');
+
 			
 		}
 		#end
@@ -67,8 +71,8 @@ class SUtil
 	/**
 	 * This returns the external storage path that the game will use
 	 */
-	public static function getPath():String
-		#if android return Environment.getExternalStorageDirectory() + '/' + '.' + Application.current.meta.get('file') + '/'; #else return ''; #end
+	public static function getPath():String #if android return Environment.getExternalStorageDirectory() + '/' + '.' + Lib.application.meta.get('file') +
+		'/'; #else return ''; #end
 
 	/**
 	 * Uncaught error handler, original made by: sqirra-rng
@@ -99,6 +103,7 @@ class SUtil
 
 			errMsg += u.error;
 
+			#if (sys && !ios)
 			try
 			{
 				if (!FileSystem.exists(SUtil.getPath() + 'logs'))
@@ -106,7 +111,7 @@ class SUtil
 
 				File.saveContent(SUtil.getPath()
 					+ 'logs/'
-					+ Application.current.meta.get('file')
+					+ Lib.application.meta.get('file')
 					+ '-'
 					+ Date.now().toString().replace(' ', '-').replace(':', "'")
 					+ '.log',
@@ -115,16 +120,17 @@ class SUtil
 			}
 			#if android
 			catch (e:Dynamic)
-			Hardware.toast("Error!\nClouldn't save the crash dump because:\n" + e, ToastType.LENGTH_LONG);
+			Toast.makeText("Error!\nClouldn't save the crash dump because:\n" + e, Toast.LENGTH_LONG);
+			#end
 			#end
 
-			Sys.println(errMsg);
-			Application.current.window.alert(errMsg, 'Error!');
-
+			println(errMsg);
+			Lib.application.window.alert(errMsg, 'Error!');
 			System.exit(1);
 		});
 	}
 
+	#if (sys && !ios)
 	public static function saveContent(fileName:String = 'file', fileExtension:String = '.json',
 			fileData:String = 'you forgot to add something in your code lol')
 	{
@@ -134,11 +140,13 @@ class SUtil
 				FileSystem.createDirectory(SUtil.getPath() + 'saves');
 
 			File.saveContent(SUtil.getPath() + 'saves/' + fileName + fileExtension, fileData);
-			Hardware.toast("File Saved Successfully!", ToastType.LENGTH_LONG);
+			#if android
+			Toast.makeText("File Saved Successfully!", Toast.LENGTH_LONG);
+			#end
 		}
 		#if android
 		catch (e:Dynamic)
-		Hardware.toast("Error!\nClouldn't save the file because:\n" + e, ToastType.LENGTH_LONG);
+		Toast.makeText("Error!\nClouldn't save the file because:\n" + e, Toast.LENGTH_LONG);
 		#end
 	}
 
@@ -151,7 +159,18 @@ class SUtil
 		}
 		#if android
 		catch (e:Dynamic)
-		Hardware.toast("Error!\nClouldn't copy the file because:\n" + e, ToastType.LENGTH_LONG);
+		Toast.makeText("Error!\nClouldn't copy the file because:\n" + e, Toast.LENGTH_LONG);
+		#end
+	}
+	#end
+
+	private static function println(msg:String):Void
+	{
+		#if sys
+		Sys.println(msg);
+		#else
+		// Pass null to exclude the position.
+		haxe.Log.trace(msg, null);
 		#end
 	}
 }
