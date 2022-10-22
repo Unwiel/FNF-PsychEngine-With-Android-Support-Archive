@@ -13,6 +13,7 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import lime.utils.Assets;
 import flixel.FlxSprite;
+import polymod.backends.PolymodAssets.PolymodAssetType;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -29,6 +30,13 @@ class Paths
 {
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 	inline public static var VIDEO_EXT = "mp4";
+
+        private static final extensions:Map<String, PolymodAssetType> = [
+		'mp3' => AUDIO_GENERIC, 'ogg' => AUDIO_GENERIC, 'wav' => AUDIO_GENERIC, 'jpg' => IMAGE, 'png' => IMAGE, 'gif' => IMAGE, 'tga' => IMAGE,
+		'bmp' => IMAGE, 'tif' => IMAGE, 'tiff' => IMAGE, 'xml' => TEXT, 'json' => TEXT, 'csv' => TEXT, 'tsv' => TEXT, 'mpf' => TEXT, 'tsx' => TEXT,
+		'tmx' => TEXT, 'vdf' => TEXT, 'frag' => TEXT, 'vert' => TEXT, 'txt' => TEXT, 'hx' => TEXT, 'ttf' => FONT, 'otf' => FONT, 'webm' => VIDEO,
+		'mp4' => VIDEO, 'mov' => VIDEO, 'avi' => VIDEO, 'mkv' => VIDEO
+	];
 
 	#if MODS_ALLOWED
 	public static var ignoreModFolders:Array<String> = [
