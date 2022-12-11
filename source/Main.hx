@@ -86,7 +86,11 @@ class Main extends Sprite
 		SUtil.check();
 	
 		ClientPrefs.loadDefaultKeys();
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		#if (flixel >= "5.0.0")
+		addChild(new FlxGame(1280, 720, TitleState, framerate, framerate, true));
+		#else
+		addChild(new FlxGame(1280, 720, TitleState, 1, framerate, framerate, true));
+		#end
 
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
