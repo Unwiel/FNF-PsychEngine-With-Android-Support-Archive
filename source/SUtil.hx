@@ -121,10 +121,10 @@ class SUtil
 			#if sys
 			try
 			{
-				if (!FileSystem.exists(SUtil.getStorageDirectory() + 'logs'))
-					FileSystem.createDirectory(SUtil.getStorageDirectory() + 'logs');
+				if (!FileSystem.exists(SUtil.getPath() + 'logs'))
+					FileSystem.createDirectory(SUtil.getPath() + 'logs');
 
-				File.saveContent(SUtil.getStorageDirectory()
+				File.saveContent(SUtil.getPath()
 					+ 'logs/'
 					+ Lib.application.meta.get('file')
 					+ '-'
@@ -184,10 +184,10 @@ class SUtil
 	{
 		try
 		{
-			if (!FileSystem.exists(SUtil.getStorageDirectory() + 'saves'))
-				FileSystem.createDirectory(SUtil.getStorageDirectory() + 'saves');
+			if (!FileSystem.exists(SUtil.getPath() + 'saves'))
+				FileSystem.createDirectory(SUtil.getPath() + 'saves');
 
-			File.saveContent(SUtil.getStorageDirectory() + 'saves/' + fileName + fileExtension, fileData);
+			File.saveContent(SUtil.getPath() + 'saves/' + fileName + fileExtension, fileData);
 			#if android
 			Toast.makeText("File Saved Successfully!", Toast.LENGTH_LONG);
 			#end
