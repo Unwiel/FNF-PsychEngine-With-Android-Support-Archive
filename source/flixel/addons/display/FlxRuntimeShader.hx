@@ -2,7 +2,12 @@ package flixel.graphics.tile;
 
 import openfl.display.ShaderParameter;
 import sys.io.File;
-#if FLX_DRAW_QUADS
+import flixel.system.FlxAssets.FlxShader;
+import lime.utils.Float32Array;
+import openfl.display.BitmapData;
+import openfl.display.ShaderInput;
+import openfl.display.ShaderParameterType;
+
 import openfl.display.GraphicsShader;
 
 // Edited by gedehari and kemo
@@ -119,4 +124,3 @@ class FlxRuntimeShader extends GraphicsShader
 		hasColorTransform = data.hasColorTransform;
 	}
 }
-#end
