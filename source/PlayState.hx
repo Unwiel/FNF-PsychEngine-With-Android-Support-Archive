@@ -1417,14 +1417,14 @@ class PlayState extends MusicBeatState
 			#if MODS_ALLOWED
 			if(FileSystem.exists(Paths.modFolders(frag)))
 			{
-				frag = File.getContent(frag);
+				frag = Paths.modFolders(frag);
 				doPush = true;
 			}
 			else frag = null;
 			
 			if(FileSystem.exists(Paths.modFolders(vertex)))
 			{
-				vertex = File.getContent(vertex);
+				vertex = Paths.modFolders(vertex);
 				doPush = true;
 			}
 			

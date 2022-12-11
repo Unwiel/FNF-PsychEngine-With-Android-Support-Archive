@@ -2353,7 +2353,7 @@ class FunkinLua {
 
 		Lua_helper.add_callback(lua, "vibration", function(milliseconds:Int) {
 			#if android
-			Hardware.vibrate(milliseconds);
+			//Hardware.vibrate(milliseconds);
 			#end
 		});
 
@@ -2890,14 +2890,14 @@ class FunkinLua {
 			#if MODS_ALLOWED
 			if(FileSystem.exists(Paths.modFolders(frag)))
 			{
-				frag = File.getContent(frag);
+				frag = Paths.modFolders(frag);
 				doPush = true;
 			}
 			else frag = null;
 			
 			if(FileSystem.exists(Paths.modFolders(vertex)))
 			{
-				vertex = File.getContent(vertex);
+				vertex = Paths.modFolders(vertex);
 				doPush = true;
 			}
 			
@@ -2905,7 +2905,7 @@ class FunkinLua {
 			
 			    if(doPush)
 				{
-					PlayState.instance.runtimeShaders.set(name, [frag, vert]);
+					PlayState.instance.runtimeShaders.set(name, [frag, vertex]);
 					//trace('Found shader $name!');
 					return true;
 				}
