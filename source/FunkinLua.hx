@@ -2827,6 +2827,7 @@ class FunkinLua {
 			if(FileSystem.exists(Paths.modFolders(frag)))
 			{
 				frag = Paths.modFolders(frag);
+				frag = File.getContent(frag);
 				doPush = true;
 			}
 			else frag = null;
@@ -2834,6 +2835,7 @@ class FunkinLua {
 			if(FileSystem.exists(Paths.modFolders(vertex)))
 			{
 				vertex = Paths.modFolders(vertex);
+				vertex = File.getContent(vertex);
 				doPush = true;
 			}
 			
