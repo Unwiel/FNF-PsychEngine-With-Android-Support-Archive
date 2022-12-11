@@ -2829,7 +2829,7 @@ class FunkinLua {
 				frag = Paths.modFolders(frag);
 				frag = File.getContent(frag);
 				doPush = true;
-				luatrace('Found shader $name!');
+				luaTrace('Found shader $name .frag');
 			}
 			else frag = null;
 			
@@ -2838,7 +2838,7 @@ class FunkinLua {
 				vertex = Paths.modFolders(vertex);
 				vertex = File.getContent(vertex);
 				doPush = true;
-				luatrace('Found shader $name!');
+				luaTrace('Found shader $name .vert');
 			}
 			
 			else vertex = null;
