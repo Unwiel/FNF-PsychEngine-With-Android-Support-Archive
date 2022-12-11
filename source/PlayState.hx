@@ -1386,7 +1386,7 @@ class PlayState extends MusicBeatState
 		if(!ClientPrefs.shaders) return new FlxRuntimeShader();
 
 		#if (!flash && MODS_ALLOWED && sys)
-		if(!runtimeShaders.exists(name))
+		if(!runtimeShaders.exists(name) && !initLuaShader(name))
 		{
 			FlxG.log.warn('Shader $name is missing!');
 			return new FlxRuntimeShader();
@@ -1410,38 +1410,43 @@ class PlayState extends MusicBeatState
 			return true;
 		}
 
-		    var frag = "shader/" + name + ".frag";
-		    var vertex ="shader/" + name + ".vert";
-			
-			var doPush = false;
-			#if MODS_ALLOWED
-			if(FileSystem.exists(Paths.modFolders(frag)))
+		    
+		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
+		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
+
+		for(mod in Paths.getGlobalMods())
+			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
+		
+		for (folder in foldersToCheck)
+		{
+			if(FileSystem.exists(folder))
 			{
-				frag = Paths.modFolders(frag);
-				frag = File.getContent(frag);
-				doPush = true;
-			}
-			else frag = null;
-			
-			if(FileSystem.exists(Paths.modFolders(vertex)))
-			{
-				vertex = Paths.modFolders(vertex);
-				vertex = File.getContent(vertex);
-				doPush = true;
-			}
-			
-			    if(doPush)
+				var frag:String = folder + name + '.frag';
+				var vert:String = folder + name + '.vert';
+				var found:Bool = false;
+				if(FileSystem.exists(frag))
 				{
-					runtimeShaders.set(name, [frag, vertex]);
+					frag = File.getContent(frag);
+					found = true;
+				}
+				else frag = null;
+
+				if (FileSystem.exists(vert))
+				{
+					vert = File.getContent(vert);
+					found = true;
+				}
+				else vert = null;
+
+				if(found)
+				{
+					runtimeShaders.set(name, [frag, vert]);
 					//trace('Found shader $name!');
 					return true;
 				}
-			   else
-			   {
-		         FlxG.log.warn('Missing shader $name .frag AND .vert files!');
-		         return false;
-		       }
-		   #end
+			}
+		} 
 	}
 	
 
