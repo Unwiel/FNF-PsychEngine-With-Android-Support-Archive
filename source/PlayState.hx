@@ -1417,20 +1417,20 @@ class PlayState extends MusicBeatState
 			#if MODS_ALLOWED
 			if(FileSystem.exists(Paths.modFolders(frag)))
 			{
-				frag = Paths.modFolders(frag);
+				frag = File.getContent(frag);
 				doPush = true;
 			}
 			else frag = null;
 			
 			if(FileSystem.exists(Paths.modFolders(vertex)))
 			{
-				vertex = Paths.modFolders(vertex);
+				vertex = File.getContent(vertex);
 				doPush = true;
 			}
 			
 			    if(doPush)
 				{
-					runtimeShaders.set(name, [frag, vert]);
+					runtimeShaders.set(name, [frag, vertex]);
 					//trace('Found shader $name!');
 					return true;
 				}
