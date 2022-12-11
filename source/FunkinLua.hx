@@ -2819,8 +2819,8 @@ class FunkinLua {
 			return true;
 		}
 
-		    var frag = "shader/" + name + ".frag";
-		    var vertex ="shader/" + name + ".vert";
+		    var frag = "shaders/" + name + ".frag";
+		    var vertex ="shaders/" + name + ".vert";
 			
 			var doPush = false;
 			#if MODS_ALLOWED
