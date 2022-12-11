@@ -2819,44 +2819,45 @@ class FunkinLua {
 			return true;
 		}
 
-		    var frag = "shaders/" + name + ".frag";
-		    var vertex ="shaders/" + name + ".vert";
-			
-			var doPush = false;
-			#if MODS_ALLOWED
-			if(FileSystem.exists(Paths.modFolders(frag)))
+		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
+		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
+
+		for(mod in Paths.getGlobalMods())
+			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
+		
+		for (folder in foldersToCheck)
+		{
+			if(FileSystem.exists(folder))
 			{
-				frag = Paths.modFolders(frag);
-				frag = File.getContent(frag);
-				doPush = true;
-				luaTrace('Found shader $name .frag');
-			}
-			else frag = null;
-			
-			if(FileSystem.exists(Paths.modFolders(vertex)))
-			{
-				vertex = Paths.modFolders(vertex);
-				vertex = File.getContent(vertex);
-				doPush = true;
-				luaTrace('Found shader $name .vert');
-			}
-			
-			else vertex = null;
-			
-			    if(doPush)
+				var frag:String = folder + name + '.frag';
+				var vert:String = folder + name + '.vert';
+				var found:Bool = false;
+				if(FileSystem.exists(frag))
 				{
-					PlayState.instance.runtimeShaders.set(name, [frag, vertex]);
+					frag = File.getContent(frag);
+					found = true;
+				}
+				else frag = null;
+
+				if (FileSystem.exists(vert))
+				{
+					vert = File.getContent(vert);
+					found = true;
+				}
+				else vert = null;
+
+				if(found)
+				{
+					PlayState.instance.runtimeShaders.set(name, [frag, vert]);
 					PlayState.instance.createRuntimeShader(name);
-					
+					//trace('Found shader $name!');
 					return true;
 				}
-				else
-				{
-				     luaTrace('Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
-		             return false;   
-				} 
-			
-			#end
+			}
+		}
+		luaTrace('Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
+		return false;
 		
 		
 	}
