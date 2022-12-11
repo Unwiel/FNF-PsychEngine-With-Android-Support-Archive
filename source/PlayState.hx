@@ -1400,7 +1400,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public function initLuaShader(name:String, ?glslVersion:Int = 120)
+	public function initLuaShader(name:String)
 	{
 		if(!ClientPrefs.shaders) return false;
 
@@ -1410,42 +1410,30 @@ class PlayState extends MusicBeatState
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
-		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
-
-		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
-		
-		for (folder in foldersToCheck)
-		{
-			if(FileSystem.exists(folder))
+		    var frag = "shader/" + name + ".frag";
+		    var vertex ="shader/" + name + ".vert";
+			
+			var doPush = false;
+			#if MODS_ALLOWED
+			if(FileSystem.exists(Paths.modFolders(frag)))
 			{
-				var frag:String = folder + name + '.frag';
-				var vert:String = folder + name + '.vert';
-				var found:Bool = false;
-				if(FileSystem.exists(frag))
-				{
-					frag = File.getContent(frag);
-					found = true;
-				}
-				else frag = null;
-
-				if (FileSystem.exists(vert))
-				{
-					vert = File.getContent(vert);
-					found = true;
-				}
-				else vert = null;
-
-				if(found)
+				frag = Paths.modFolders(frag);
+				doPush = true;
+			}
+			else frag = null;
+			
+			if(FileSystem.exists(Paths.modFolders(vertex)))
+			{
+				vertex = Paths.modFolders(vertex);
+				doPush = true;
+			}
+			
+			    if(doPush)
 				{
 					runtimeShaders.set(name, [frag, vert]);
 					//trace('Found shader $name!');
 					return true;
 				}
-			}
-		}
 		FlxG.log.warn('Missing shader $name .frag AND .vert files!');
 		return false;
 	}

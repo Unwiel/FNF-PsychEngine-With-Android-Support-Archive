@@ -54,7 +54,7 @@ import Discord;
 #end
 
 #if android
-import android.Hardware;
+//import android.Hardware;
 #end
 
 using StringTools;
@@ -2873,7 +2873,7 @@ class FunkinLua {
 		return null;
 	}
 	
-	function initLuaShader(name:String, ?glslVersion:Int = 120)
+	function initLuaShader(name:String)
 	{
 		if(!ClientPrefs.shaders) return false;
 
@@ -2883,42 +2883,35 @@ class FunkinLua {
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
-		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
-
-		for(mod in Paths.getGlobalMods())
-			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
-		
-		for (folder in foldersToCheck)
-		{
-			if(FileSystem.exists(folder))
+		    var frag = "shader/" + name + ".frag";
+		    var vertex ="shader/" + name + ".vert";
+			
+			var doPush = false;
+			#if MODS_ALLOWED
+			if(FileSystem.exists(Paths.modFolders(frag)))
 			{
-				var frag:String = folder + name + '.frag';
-				var vert:String = folder + name + '.vert';
-				var found:Bool = false;
-				if(FileSystem.exists(frag))
-				{
-					frag = File.getContent(frag);
-					found = true;
-				}
-				else frag = null;
-
-				if (FileSystem.exists(vert))
-				{
-					vert = File.getContent(vert);
-					found = true;
-				}
-				else vert = null;
-
-				if(found)
+				frag = Paths.modFolders(frag);
+				doPush = true;
+			}
+			else frag = null;
+			
+			if(FileSystem.exists(Paths.modFolders(vertex)))
+			{
+				vertex = Paths.modFolders(vertex);
+				doPush = true;
+			}
+			
+			else vertex = null;
+			
+			    if(doPush)
 				{
 					PlayState.instance.runtimeShaders.set(name, [frag, vert]);
 					//trace('Found shader $name!');
 					return true;
 				}
-			}
-		}
+			
+			#end
+		
 		luaTrace('Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
 		return false;
 	}
