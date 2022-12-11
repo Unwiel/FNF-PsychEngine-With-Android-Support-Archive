@@ -2844,6 +2844,7 @@ class FunkinLua {
 			    if(doPush)
 				{
 					PlayState.instance.runtimeShaders.set(name, [frag, vertex]);
+					PlayState.instance.createRuntimeShader(name);
 					//trace('Found shader $name!');
 					return true;
 				}
