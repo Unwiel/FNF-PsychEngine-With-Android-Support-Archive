@@ -1446,7 +1446,9 @@ class PlayState extends MusicBeatState
 					return true;
 				}
 			}
-		} 
+		}
+		FlxG.log.warn('Missing shader $name .frag AND .vert files!');
+		return false;
 	}
 	
 
