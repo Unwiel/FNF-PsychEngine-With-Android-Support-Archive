@@ -6,7 +6,7 @@ import sys.io.File;
 import openfl.display.GraphicsShader;
 
 // Edited by gedehari and kemo
-class FlxGraphicsShader extends GraphicsShader
+class FlxRuntimeShader extends GraphicsShader
 {
 	public var alpha:ShaderParameter<Float>;
 	public var colorMultiplier:ShaderParameter<Float>;
