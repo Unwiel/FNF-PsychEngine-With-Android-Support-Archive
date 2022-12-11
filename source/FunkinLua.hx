@@ -2829,6 +2829,7 @@ class FunkinLua {
 				frag = Paths.modFolders(frag);
 				frag = File.getContent(frag);
 				doPush = true;
+				luatrace('Found shader $name!');
 			}
 			else frag = null;
 			
@@ -2837,6 +2838,7 @@ class FunkinLua {
 				vertex = Paths.modFolders(vertex);
 				vertex = File.getContent(vertex);
 				doPush = true;
+				luatrace('Found shader $name!');
 			}
 			
 			else vertex = null;
@@ -2845,14 +2847,18 @@ class FunkinLua {
 				{
 					PlayState.instance.runtimeShaders.set(name, [frag, vertex]);
 					PlayState.instance.createRuntimeShader(name);
-					//trace('Found shader $name!');
+					
 					return true;
 				}
+				else
+				{
+				     luaTrace('Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
+		             return false;   
+				} 
 			
 			#end
 		
-		luaTrace('Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
-		return false;
+		
 	}
 
 	function getGroupStuff(leArray:Dynamic, variable:String) {
